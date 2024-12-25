@@ -1,7 +1,9 @@
 let express = require('express');
 let app = express();
 let bodyParser = require('body-parser');
-let neighbor = require('./routes/neighbors');
+let student = require('./routes/students');
+let course = require('./routes/courses');
+let grade = require('./routes/grades');
 
 let mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
@@ -14,9 +16,7 @@ const options = {};
 
 mongoose.connect(uri, options)
     .then(() => {
-            console.log("Connecté à la base MongoDB neighbors dans le cloud !");
-            console.log("at URI = " + uri);
-            console.log("vérifiez with http://localhost:8010/api/neighbors que cela fonctionne")
+            console.log("Connexion à la base OK");
         },
         err => {
             console.log('Erreur de connexion: ', err);
@@ -39,14 +39,17 @@ let port = process.env.PORT || 8010;
 // les routes
 const prefix = '/api';
 
-app.route(prefix + '/neighbors')
-    .get(neighbor.getAll)
-    .post(neighbor.create);
+app.route(prefix + '/students')
+    .get(student.getAll)
+    .post(student.create);
 
-app.route(prefix + '/neighbors/:id')
-    .get(neighbor.getOne)
-    .delete(neighbor.deleteOne)
-    .put(neighbor.update);
+app.route(prefix + '/courses')
+    .get(course.getAll)
+    .post(course.create);
+
+app.route(prefix + '/grades')
+    .get(grade.getAll)
+    .post(grade.create);
 
 // On démarre le serveur
 app.listen(port, "0.0.0.0");
