@@ -9,8 +9,8 @@ let mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 //mongoose.set('debug', true);
 
-// remplacer toute cette chaine par l'URI de connexion à votre propre base dans le cloud s
-const uri = 'mongodb+srv://gobelins:oo7hrJ1Nznu1OCvL@cluster0.phksz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+// TODO remplacer toute cette chaine par l'URI de connexion à votre propre base dans le cloud
+const uri = '...';
 
 const options = {};
 
