@@ -2,7 +2,7 @@ let express = require('express');
 let app = express();
 let bodyParser = require('body-parser');
 let student = require('./routes/students');
-let course = require('./routes/courses');
+let course = require('./routes/courses'); // Pas besoin de spécifier .js, Node.js le trouve automatiquement
 let grade = require('./routes/grades');
 
 let mongoose = require('mongoose');
@@ -10,7 +10,7 @@ mongoose.Promise = global.Promise;
 //mongoose.set('debug', true);
 
 // TODO remplacer toute cette chaine par l'URI de connexion à votre propre base dans le cloud
-const uri = '...';
+const uri = 'mongodb+srv://dakoukyelmestapha:qtsDKxwrrco9Ven5@cluster0.r1k9z.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 
 const options = {};
 
@@ -41,20 +41,34 @@ const prefix = '/api';
 
 app.route(prefix + '/students')
     .get(student.getAll)
-    .post(student.create);
+    .post(student.create)
+    ;
+app.route(prefix + '/students/:id') // Ajout de :id dans l'URL
+    .put(student.update)
+    .delete(student.remove);
+
 
 app.route(prefix + '/courses')
     .get(course.getAll)
     .post(course.create);
 
+
+
+app.route(prefix + '/courses/:id') // Pour les opérations spécifiques
+    .put(course.update)
+    .delete(course.remove);
+
+    
+
 app.route(prefix + '/grades')
     .get(grade.getAll)
     .post(grade.create);
-
+app.route(prefix + '/grades/:id')
+    .put(grade.update)
+    .delete(grade.remove);
 // On démarre le serveur
 app.listen(port, "0.0.0.0");
 console.log('Serveur démarré sur http://localhost:' + port);
 
 module.exports = app;
-
 
