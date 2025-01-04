@@ -5,20 +5,10 @@ let student = require('./routes/students');
 let course = require('./routes/courses'); // Pas besoin de spécifier .js, Node.js le trouve automatiquement
 let grade = require('./routes/grades');
 
-
-require('dotenv').config();
-const cors = require('cors');
-const passport = require('./config/passport');
-const session = require('express-session');
-const connectDB = require('./config/db');
-const auth = require('./routes/auth');
-
-
-
 let mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 //mongoose.set('debug', true);
-/* 
+
 // TODO remplacer toute cette chaine par l'URI de connexion à votre propre base dans le cloud
 const uri = 'mongodb+srv://dakoukyelmestapha:qtsDKxwrrco9Ven5@cluster0.r1k9z.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 
@@ -31,12 +21,7 @@ mongoose.connect(uri, options)
         err => {
             console.log('Erreur de connexion: ', err);
         });
- */
 
-
-
-// Connect to MongoDB
-    connectDB();
 // Pour accepter les connexions cross-domain (CORS)
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -51,26 +36,8 @@ app.use(bodyParser.json());
 
 let port = process.env.PORT || 8010;
 
-
-
-app.use(cors({
-    origin: process.env.FRONTEND_URL,
-    credentials: true
-  }));
-  app.use(express.json());
-  app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false
-  }));
-  app.use(passport.initialize());
-  app.use(passport.session());
-
 // les routes
 const prefix = '/api';
-
-// Routes
-app.use(prefix + '/auth', auth);
 
 app.route(prefix + '/students')
     .get(student.getAll)
@@ -99,9 +66,6 @@ app.route(prefix + '/grades')
 app.route(prefix + '/grades/:id')
     .put(grade.update)
     .delete(grade.remove);
-
-
-
 // On démarre le serveur
 app.listen(port, "0.0.0.0");
 console.log('Serveur démarré sur http://localhost:' + port);
