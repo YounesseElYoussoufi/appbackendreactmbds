@@ -9,18 +9,25 @@ const cors = require("cors");
 const passportSetup = require("./passport");
 const passport = require("passport");
 const authRoute = require("./routes/auth");
+const crypto = require('crypto');
 
 
 const session = require('express-session');
 
+const generateSessionSecret = () => {
+    return crypto.randomBytes(32).toString('hex');
+};
+
+// Session configuration
+const sessionSecret = process.env.SESSION_SECRET || generateSessionSecret();
 app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    secure: process.env.NODE_ENV === 'production',
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
-  }
+    secret: sessionSecret,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    }
 }));
   
   app.use(passport.initialize());

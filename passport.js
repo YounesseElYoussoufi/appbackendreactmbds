@@ -2,7 +2,8 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const GitHubStrategy = require('passport-github2').Strategy;
 const LinkedInStrategy = require('passport-linkedin-oauth2').Strategy;
 const passport = require("passport");
-const User = require('../model/User');
+const User = require('./model/User');
+require('dotenv').config();
 
 const GOOGLE_CLIENT_ID =
   "your id";
@@ -30,11 +31,11 @@ passport.serializeUser((user, done) => {
   
   // Google Strategy
   passport.use(new GoogleStrategy({
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "/api/auth/google/callback",
-      scope: ['profile', 'email']
-    },
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: "/api/auth/google/callback",
+    scope: ['profile', 'email']
+},
     async (accessToken, refreshToken, profile, done) => {
       try {
         const existingUser = await User.findOne({ googleId: profile.id });
@@ -63,11 +64,11 @@ passport.serializeUser((user, done) => {
   
   // GitHub Strategy
   passport.use(new GitHubStrategy({
-      clientID: process.env.GITHUB_CLIENT_ID,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: "/api/auth/github/callback",
-      scope: ['user:email']
-    },
+    clientID: process.env.GITHUB_CLIENT_ID,
+    clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    callbackURL: "/api/auth/github/callback",
+    scope: ['user:email']
+},
     async (accessToken, refreshToken, profile, done) => {
       try {
         const existingUser = await User.findOne({ githubId: profile.id });
@@ -96,11 +97,11 @@ passport.serializeUser((user, done) => {
   
   // LinkedIn Strategy
   passport.use(new LinkedInStrategy({
-      clientID: process.env.LINKEDIN_CLIENT_ID,
-      clientSecret: process.env.LINKEDIN_CLIENT_SECRET,
-      callbackURL: "/api/auth/linkedin/callback",
-      scope: ['r_emailaddress', 'r_liteprofile']
-    },
+    clientID: process.env.LINKEDIN_CLIENT_ID,
+    clientSecret: process.env.LINKEDIN_CLIENT_SECRET,
+    callbackURL: "/api/auth/linkedin/callback",
+    scope: ['r_emailaddress', 'r_liteprofile']
+},
     async (accessToken, refreshToken, profile, done) => {
       try {
         const existingUser = await User.findOne({ linkedinId: profile.id });

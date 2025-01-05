@@ -36,6 +36,31 @@ router.get("/logout", (req, res) => {
   res.redirect(CLIENT_URL);
 });
 
+// In auth.js routes
+router.get('/verify-email/:token', async (req, res) => {
+    try {
+      const { token } = req.params;
+      
+      // Verify the token
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      
+      // Find and update the user
+      const user = await User.findOneAndUpdate(
+        { _id: decoded.userId },
+        { isVerified: true },
+        { new: true }
+      );
+  
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      res.status(200).json({ message: 'Email verified successfully' });
+    } catch (error) {
+      res.status(400).json({ message: 'Invalid or expired verification token' });
+    }
+  });
+
 // Google Auth Routes
 router.get('/google',
     passport.authenticate('google', { scope: ['profile', 'email'] })
