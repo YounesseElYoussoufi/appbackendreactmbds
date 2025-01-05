@@ -5,17 +5,23 @@ let student = require('./routes/students');
 let course = require('./routes/courses'); // Pas besoin de spécifier .js, Node.js le trouve automatiquement
 let grade = require('./routes/grades');
 
-
-const cookieSession = require("cookie-session");
 const cors = require("cors");
 const passportSetup = require("./passport");
 const passport = require("passport");
 const authRoute = require("./routes/auth");
 
 
-app.use(
-    cookieSession({ name: "session", keys: ["lama"], maxAge: 24 * 60 * 60 * 100 })
-  );
+const session = require('express-session');
+
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
+}));
   
   app.use(passport.initialize());
   app.use(passport.session());
