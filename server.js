@@ -1,11 +1,12 @@
-let express = require('express');
-let app = express();
+const express = require('express');
+const app = express();
+const cors = require('cors');
 let bodyParser = require('body-parser');
 let student = require('./routes/students');
 let course = require('./routes/courses'); // Pas besoin de spécifier .js, Node.js le trouve automatiquement
 let grade = require('./routes/grades');
 
-const cors = require("cors");
+
 const passportSetup = require("./passport");
 const passport = require("passport");
 const authRoute = require("./routes/auth");
@@ -29,6 +30,8 @@ app.use(session({
         maxAge: 24 * 60 * 60 * 1000 // 24 hours
     }
 }));
+
+
   
   app.use(passport.initialize());
   app.use(passport.session());
@@ -42,6 +45,13 @@ mongoose.Promise = global.Promise;
 const uri = 'mongodb+srv://dakoukyelmestapha:qtsDKxwrrco9Ven5@cluster0.r1k9z.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 
 const options = {};
+
+app.use(cors({
+    origin: "http://localhost:5173",
+    methods: "GET,POST,PUT,DELETE",
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 mongoose.connect(uri, options)
     .then(() => {
