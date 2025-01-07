@@ -4,7 +4,7 @@ let bodyParser = require('body-parser');
 let student = require('./routes/students');
 let course = require('./routes/courses'); // Pas besoin de spécifier .js, Node.js le trouve automatiquement
 let grade = require('./routes/grades');
-
+let user = require('./routes/users');
 const cors = require("cors");
 const passportSetup = require("./passport");
 const passport = require("passport");
@@ -97,6 +97,17 @@ app.route(prefix + '/grades')
 app.route(prefix + '/grades/:id')
     .put(grade.update)
     .delete(grade.remove);
+
+
+
+    app.route(prefix + '/users')
+    .get(user.getAll)
+    .post(user.create);
+app.route(prefix + '/users/:id')
+    .put(user.update)
+    .delete(user.remove);
+
+
 // On démarre le serveur
 app.listen(port, "0.0.0.0");
 console.log('Serveur démarré sur http://localhost:' + port);
