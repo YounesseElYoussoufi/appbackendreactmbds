@@ -1,3 +1,4 @@
+// models/User.js
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
@@ -12,8 +13,14 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  firstName: String,
-  lastName: String,
+  firstName: {
+    type: String,
+    required: true,
+  },
+  lastName: {
+    type: String,
+    required: true,
+  },
   isVerified: {
     type: Boolean,
     default: false
@@ -30,8 +37,12 @@ const UserSchema = new mongoose.Schema({
   githubId: String,
   linkedinId: String,
   provider: String,
-  profilePicture: String
-  
+  profilePicture: String ,
+   role: {
+    type: String,
+    enum: ['ETUDIANT', 'ADMIN', 'SCOLARITE'], // Liste des rôles autorisés
+    default: 'ETUDIANT', // Rôle par défaut
+  },
 });
 
 // Hash password before saving
@@ -46,4 +57,7 @@ UserSchema.methods.comparePassword = async function(candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
 
+// Clear existing indexes before creating new ones
 const User = mongoose.model('User', UserSchema);
+
+module.exports = User;
